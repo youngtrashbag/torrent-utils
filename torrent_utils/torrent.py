@@ -31,14 +31,25 @@ class Torrent:
         :param json_obj: object that has been parsed with ``json.loads()``
         :return: Torrent
         """
+        tags = []
+        if json_obj.get('tags'):
+            tags = json_obj.get('tags').split(',')
         return Torrent(
             hash=json_obj.get('hash'),
             magnet_uri=json_obj.get('magnet_uri'),
             content_path=Path(json_obj.get('content_path')),
             name=json_obj.get('name'),
             category=json_obj.get('category'),
-            tags=json_obj.get('tags').split(',')
+            tags=tags
         )
 
-    def to_json(self) -> str:
-        return json.dumps(self)
+    @property
+    def __dict__(self) -> str:
+        return {
+            'hash': self.hash,
+            'magnet_uri': self.magnet_uri,
+            'content_path': str(self.content_path),
+            'name': self.name,
+            'category': self.category,
+            'tags': self.tags,
+        }
