@@ -26,7 +26,7 @@ from torrent_utils.torrent import Torrent
 
 def create_index(backend: Backend, file_path: Path):
     if os.path.exists(file_path):
-        raise FileExistsError('Cannot overwrite file')
+        raise FileExistsError(f'Cannot overwrite file "{file_path}"')
 
     torrents = []
     for t in backend.torrent_list():
@@ -40,6 +40,23 @@ def create_index(backend: Backend, file_path: Path):
                 indent=4
             )
         )
+
+
+def load_index(backend: Backend, file_path: Path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f'"{file_path}" not found')
+
+    torrents = []
+    with open(Path(file_path), mode='r', encoding='UTF-8') as index_file:
+        indexed_torrents = json.loads(index_file.read())
+        for t in indexed_torrents:
+            torrents.append(Torrent.from_json(t))
+
+    for t in torrents:
+        if backend.add_torrent(t):
+            print(f'Successfully added "{t.name}" to client')
+        else:
+            print(f'Failed to add "{t.name}" to client')
 
 
 def main(argv=None):
@@ -59,7 +76,7 @@ def main(argv=None):
     if action == 'create':
         create_index(backend, file_path)
     elif action == 'load':
-        pass
+        load_index(backend, file_path)
     else:
         print(f'"{action}" is not a valid action')
         sys.exit()

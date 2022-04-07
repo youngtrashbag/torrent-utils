@@ -23,7 +23,6 @@ class Backend:
         self.authorized = False
         self.url = f'{url}/api/v2'
         self.session = requests.Session()
-        self.session.headers.update({'Content-type': 'application/x-www-form-urlencoded'})
 
     def authorize(self, username: str, password: str) -> bool:
         """
@@ -33,6 +32,7 @@ class Backend:
         :return: True if success, False if fail
         """
         data = f'username={username}&password={password}'
+        self.session.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
         response = self.session.post(f'{self.url}/auth/login', data)
 
         if response.text == 'Ok.':
@@ -45,10 +45,29 @@ class Backend:
     def torrent_list(self) -> List:
         """
         Fetches all torrents
-        :return: List of Torrent objects as provided by qBittorrent
+        **Note**: the objects in the list are not Torrent objects
+        :return: List of objects as provided by qBittorrent
         """
         if not self.authorized:
             raise NotAuthorizedError
 
         response = self.session.get(f'{self.url}/torrents/info')
         return response.json()
+
+    def add_torrent(self, torrent: Torrent) -> bool:
+        """
+        Will add a torrent to the client
+        :param torrent: Torrent instance
+        :return: True if success, False if fail
+        """
+        data = {
+            'urls': (None, torrent.magnet_uri),
+            'savepath': (None, str(torrent.content_path.parent)),
+            'category': (None, torrent.category),
+            'tags': (None, ','.join(torrent.tags)),
+        }
+
+        response = self.session.post(f'{self.url}/torrents/add', files=data)
+        if response.text == 'Ok.':
+            return True
+        return False

@@ -1,8 +1,7 @@
 """
 Providing datastructures for torrent
 """
-import json
-from typing import List
+from typing import List, Dict
 from pathlib import Path
 
 
@@ -31,9 +30,11 @@ class Torrent:
         :param json_obj: object that has been parsed with ``json.loads()``
         :return: Torrent
         """
-        tags = []
-        if json_obj.get('tags'):
-            tags = json_obj.get('tags').split(',')
+        if tags := json_obj.get('tags'):
+            if isinstance(tags, str):
+                tags = json_obj.get('tags').split(',')
+            else:
+                tags = json_obj.get('tags')
         return Torrent(
             hash=json_obj.get('hash'),
             magnet_uri=json_obj.get('magnet_uri'),
@@ -44,7 +45,7 @@ class Torrent:
         )
 
     @property
-    def __dict__(self) -> str:
+    def __dict__(self) -> Dict:
         return {
             'hash': self.hash,
             'magnet_uri': self.magnet_uri,
