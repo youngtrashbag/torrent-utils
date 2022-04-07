@@ -15,6 +15,8 @@ Actions:
 
 import os
 import json
+import sys
+
 from docopt import docopt
 from pathlib import Path
 
@@ -22,21 +24,9 @@ from torrent_utils.backend import Backend
 from torrent_utils.torrent import Torrent
 
 
-def main(argv=None):
-    kwargs = docopt(__doc__, argv=argv)
-
-    url = kwargs.pop('--url')
-    username = kwargs.pop('--username')
-    password = kwargs.pop('--password')
-    file_path = kwargs.pop('--file')
-
-    if os.path.exists(Path(file_path)):
-        raise RuntimeError('Cannot overwrite file')
-
-    backend = Backend(url)
-
-    if not backend.authorize(username, password):
-        raise RuntimeError('Could not authorize in qBittorrent Web API')
+def create_index(backend: Backend, file_path: Path):
+    if os.path.exists(file_path):
+        raise FileExistsError('Cannot overwrite file')
 
     torrents = []
     for t in backend.torrent_list():
@@ -50,6 +40,29 @@ def main(argv=None):
                 indent=4
             )
         )
+
+
+def main(argv=None):
+    kwargs = docopt(__doc__, argv=argv)
+
+    action = kwargs['<action>']
+
+    url = kwargs.pop('--url')
+    username = kwargs.pop('--username')
+    password = kwargs.pop('--password')
+    file_path = Path(kwargs.pop('--file'))
+
+    backend = Backend(url)
+    if not backend.authorize(username, password):
+        raise RuntimeError('Could not authorize in qBittorrent Web API')
+
+    if action == 'create':
+        create_index(backend, file_path)
+    elif action == 'load':
+        pass
+    else:
+        print(f'"{action}" is not a valid action')
+        sys.exit()
 
 
 if __name__ == '__main__':
