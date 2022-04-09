@@ -3,7 +3,6 @@ Backend for qBittorrent requests
 """
 
 import requests
-import json
 from typing import List
 from .torrent import Torrent
 
@@ -34,6 +33,7 @@ class Backend:
         data = f'username={username}&password={password}'
         self.session.headers.update({'Content-Type': 'application/x-www-form-urlencoded'})
         response = self.session.post(f'{self.url}/auth/login', data)
+        self.session.headers.pop('Content-Type')
 
         if response.text == 'Ok.':
             self.authorized = True
@@ -62,9 +62,9 @@ class Backend:
         """
         data = {
             'urls': (None, torrent.magnet_uri),
-            'savepath': (None, str(torrent.content_path.parent)),
-            'category': (None, torrent.category),
-            'tags': (None, ','.join(torrent.tags)),
+            'savepath': (None, str(torrent.save_path)),
+            'category': (None, torrent.category or None),
+            'tags': (None, ','.join(torrent.tags) or None),
         }
 
         response = self.session.post(f'{self.url}/torrents/add', files=data)
