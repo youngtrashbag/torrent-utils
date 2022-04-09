@@ -26,7 +26,7 @@ from torrent_utils.torrent import Torrent
 
 def create_index(backend: Backend, file_path: Path):
     if os.path.exists(file_path):
-        raise FileExistsError(f'Cannot overwrite file "{file_path}"')
+        print(f'Overwriting file "{file_path}"')
 
     torrents = []
     for t in backend.torrent_list():
@@ -40,6 +40,8 @@ def create_index(backend: Backend, file_path: Path):
                 indent=4
             )
         )
+
+    print(f'Wrote index to "{file_path}"')
 
 
 def load_index(backend: Backend, file_path: Path):
