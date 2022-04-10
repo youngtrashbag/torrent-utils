@@ -7,7 +7,7 @@ from typing import List
 from .torrent import Torrent
 
 
-class NotAuthorizedError(Exception):
+class FailedAuthorizeError(Exception):
     pass
 
 
@@ -15,15 +15,17 @@ class Backend:
     """
     Fetches info from qBittorrent Web API
     """
-    def __init__(self, url: str):
+    def __init__(self, url: str, username: str, password: str):
         """
         :param url: URL to qBittorrent Web Interface (e.g. http://192.168.1.1:8080)
         """
-        self.authorized = False
         self.url = f'{url}/api/v2'
         self.session = requests.Session()
 
-    def authorize(self, username: str, password: str) -> bool:
+        if not self._authorize(username, password):
+            raise FailedAuthorizeError('Could not authorize in qBittorrent Web API')
+
+    def _authorize(self, username: str, password: str) -> bool:
         """
         Authorizes this client in qBittorrent Web Interface
         :param username: username of the user
@@ -36,11 +38,8 @@ class Backend:
         self.session.headers.pop('Content-Type')
 
         if response.text == 'Ok.':
-            self.authorized = True
-        else:
-            self.authorized = False
-
-        return self.authorized
+            return True
+        return False
 
     def torrent_list(self) -> List:
         """
@@ -48,9 +47,6 @@ class Backend:
         **Note**: the objects in the list are not Torrent objects
         :return: List of objects as provided by qBittorrent
         """
-        if not self.authorized:
-            raise NotAuthorizedError
-
         response = self.session.get(f'{self.url}/torrents/info')
         return response.json()
 

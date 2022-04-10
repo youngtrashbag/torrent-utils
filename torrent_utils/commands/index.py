@@ -71,9 +71,7 @@ def main(argv=None):
     password = kwargs.pop('--password')
     file_path = Path(kwargs.pop('--file'))
 
-    backend = Backend(url)
-    if not backend.authorize(username, password):
-        raise RuntimeError('Could not authorize in qBittorrent Web API')
+    backend = Backend(url, username, password)
 
     if action == 'create':
         create_index(backend, file_path)
