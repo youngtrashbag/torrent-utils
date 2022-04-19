@@ -14,6 +14,8 @@ Actions:
 """
 import os
 import sys
+import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 from docopt import docopt
@@ -60,8 +62,29 @@ def create(backend: Backend, directory: Path) -> List[Path]:
     return path_list
 
 
+@dataclass
+class MagnetFile:
+    """Provides data for torrent to be loaded via magnet file"""
+    magnet_uri: str
+    save_path: Path
+    category = None
+    tags = []
+
+
 def load(backend: Backend, directory: Path):
-    pass
+    for dir_name, sub_dir, file_list in os.walk(directory):
+        for file in file_list:
+            if os.path.basename(file).split('.')[-1] == 'magnet':
+                magnet_path = Path(dir_name) / file
+                save_path = Path(dir_name).parent
+                magnet_uri = open(magnet_path, mode='r', encoding='UTF-8').read()
+
+                # creating a object with only required attributes
+                magnet_file = MagnetFile(magnet_uri=magnet_uri, save_path=save_path)
+                if backend.add_torrent(magnet_file):
+                    print(f'Successfully added "{magnet_path}" to client')
+                else:
+                    print(f'Failed to add "{magnet_path}" to client')
 
 
 def main(argv=None):
