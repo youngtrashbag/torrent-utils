@@ -1,11 +1,8 @@
 r"""
 Usage:
-    torrent_utils index <action> --url=URL --username=USERNAME --password=PASSWORD --file=FILE [<args>...]
+    torrent_utils index <action> --file=FILE [<args>...]
 
 Options:
-    --url=URL               URL to the qBittorrent WebUI
-    --username=username     Username for WebUI
-    --password=password     Password for WebUI
     -f FILE --file=FILE     path to index file
 
 Actions:
@@ -13,13 +10,14 @@ Actions:
     load                    load and add torrents from index file to client
 """
 
-import os
 import json
+import os
 import sys
-
-from docopt import docopt
 from pathlib import Path
 
+from docopt import docopt
+
+from torrent_utils import util
 from torrent_utils.backend import Backend
 from torrent_utils.torrent import Torrent
 
@@ -65,13 +63,10 @@ def main(argv=None):
     kwargs = docopt(__doc__, argv=argv)
 
     action = kwargs['<action>']
-
-    url = kwargs.pop('--url')
-    username = kwargs.pop('--username')
-    password = kwargs.pop('--password')
     file_path = Path(kwargs.pop('--file'))
 
-    backend = Backend(url, username, password)
+    credentials = util.get_credentials()
+    backend = Backend(credentials)
 
     if action == 'create':
         create_index(backend, file_path)

@@ -4,6 +4,9 @@ Manage your Torrents in the qBittorrent client *easily*.
 
 ## Usage
 
+The credentials to your qBittorrent Client will be read from your environment.
+- `source .credentials.env`
+
 ### `index`
 
 #### `create`
@@ -42,3 +45,20 @@ But if `content_path` is `/media/movies/american_psycho.mp4` the Filepath will b
 `python -m torrent_utils magnet load --directory=/media/movies`
 
 Will search subdirectories for magnet files, loads magnet files in similar way as described in *`create`*
+
+### `subtitle`
+
+#### `copy`
+
+`python -m torrent_utils subtitle copy --directory=/media/movies/eternal_sunshine_of_the_spotless_mind/`
+
+Will recursively search subdirectories for subtitle files, and copy them to where the video file is located.
+
+Supported file extensions:
+
+- `.sub`
+- `.srt`
+- `.vtt`
+- `.ass`
+- `.ssa`
+- `.idx`

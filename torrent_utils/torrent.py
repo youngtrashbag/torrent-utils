@@ -1,8 +1,8 @@
 """
 Providing datastructures for torrent
 """
-from typing import List, Dict, TypeVar
 from pathlib import Path
+from typing import List, Dict, TypeVar
 
 T = TypeVar('T', bound='Torrent')
 
@@ -11,6 +11,7 @@ class Torrent:
     """
     Stores relevant info of a torrent
     """
+
     def __init__(self, hash: str, magnet_uri: str,
                  save_path: Path, content_path: Path,
                  name: str, category: str, tags: List[str]):

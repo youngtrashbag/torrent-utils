@@ -2,27 +2,40 @@
 Backend for qBittorrent requests
 """
 
-import requests
+from dataclasses import dataclass
 from typing import List
-from .torrent import Torrent
+
+import requests
+
+from torrent_utils.exceptions import FailedAuthorizeError
+from torrent_utils.torrent import Torrent
 
 
-class FailedAuthorizeError(Exception):
-    pass
+@dataclass
+class Credentials:
+    """Credentials for the qBittorrent Client"""
+
+    URL: str
+    """URL to qBittorrent Web Interface (e.g. http://192.168.1.1:8080)"""
+    username: str
+    """username for the web interface"""
+    password: str
+    """password for the web interface"""
 
 
 class Backend:
     """
     Fetches info from qBittorrent Web API
     """
-    def __init__(self, url: str, username: str, password: str):
+
+    def __init__(self, credentials: Credentials):
         """
-        :param url: URL to qBittorrent Web Interface (e.g. http://192.168.1.1:8080)
+        :param credentials: Credentials object
         """
-        self.url = f'{url}/api/v2'
+        self.url = f'{credentials.URL}/api/v2'
         self.session = requests.Session()
 
-        if not self._authorize(username, password):
+        if not self._authorize(credentials.username, credentials.password):
             raise FailedAuthorizeError('Could not authorize in qBittorrent Web API')
 
     def _authorize(self, username: str, password: str) -> bool:
