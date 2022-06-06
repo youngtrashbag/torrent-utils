@@ -2,12 +2,13 @@
 Backend for qBittorrent requests
 """
 
-import requests
-from typing import List
 from dataclasses import dataclass
+from typing import List
 
-from torrent_utils.torrent import Torrent
+import requests
+
 from torrent_utils.exceptions import FailedAuthorizeError
+from torrent_utils.torrent import Torrent
 
 
 @dataclass
@@ -26,6 +27,7 @@ class Backend:
     """
     Fetches info from qBittorrent Web API
     """
+
     def __init__(self, credentials: Credentials):
         """
         :param credentials: Credentials object

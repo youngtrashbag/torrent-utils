@@ -13,10 +13,11 @@ Actions:
     copy            copies the subtitle file and renames it to the video file, with the correct extension
 """
 import os
-import sys
 import shutil
-from docopt import docopt
+import sys
 from pathlib import Path
+
+from docopt import docopt
 
 # NOTE: there might be other extensions,
 # please open a Pull Request if you notice that any extension may be missing

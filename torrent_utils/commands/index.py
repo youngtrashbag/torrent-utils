@@ -10,12 +10,12 @@ Actions:
     load                    load and add torrents from index file to client
 """
 
-import os
 import json
+import os
 import sys
+from pathlib import Path
 
 from docopt import docopt
-from pathlib import Path
 
 from torrent_utils import util
 from torrent_utils.backend import Backend

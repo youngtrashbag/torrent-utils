@@ -14,6 +14,7 @@ Commands:
     subtitle    copies subtitles, so media indexer can automatically add them
 """
 import sys
+
 from docopt import docopt
 
 VERSION = 'v0.0.1'

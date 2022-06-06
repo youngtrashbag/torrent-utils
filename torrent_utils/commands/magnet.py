@@ -14,6 +14,7 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
+
 from docopt import docopt
 
 from torrent_utils import util
