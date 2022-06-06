@@ -4,9 +4,9 @@ from torrent_utils.backend import Credentials
 from torrent_utils.exceptions import NoCredentialsError
 
 ENV_VARS = {
-    'url': 'qbittorrent.url',
-    'username': 'qbittorrent.username',
-    'password': 'qbittorrent.password',
+    'url': 'qbittorrent_url',
+    'username': 'qbittorrent_username',
+    'password': 'qbittorrent_password',
 }
 
 
