@@ -1,11 +1,8 @@
 r"""
 Usage:
-    torrent_utils magnet <action> --url=URL --username=USERNAME --password=PASSWORD --directory=DIRECTORY [<args>...]
+    torrent_utils magnet <action> --directory=DIRECTORY [<args>...]
 
 Options:
-    --url=URL                               URL to the qBittorrent WebUI
-    --username=username                     Username for WebUI
-    --password=password                     Password for WebUI
     -d DIRECTORY --directory=DIRECTORY      directory where the torrents are
 
 Actions:
@@ -14,12 +11,12 @@ Actions:
 """
 import os
 import sys
-import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 from docopt import docopt
 
+from torrent_utils import util
 from torrent_utils.backend import Backend
 from torrent_utils.torrent import Torrent
 
@@ -91,13 +88,10 @@ def main(argv=None):
     kwargs = docopt(__doc__, argv=argv)
 
     action = kwargs['<action>']
-
-    url = kwargs.pop('--url')
-    username = kwargs.pop('--username')
-    password = kwargs.pop('--password')
     directory = Path(kwargs.pop('--directory'))
 
-    backend = Backend(url, username, password)
+    credentials = util.get_credentials()
+    backend = Backend(credentials)
 
     if action == 'create':
         create(backend, directory)

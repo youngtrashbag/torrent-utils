@@ -4,6 +4,9 @@ Manage your Torrents in the qBittorrent client *easily*.
 
 ## Usage
 
+The credentials to your qBittorrent Client will be read from your environment.
+- `source .credentials.env`
+
 ### `index`
 
 #### `create`
