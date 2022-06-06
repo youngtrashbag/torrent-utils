@@ -11,6 +11,7 @@ Options:
 Commands:
     index       create and manage torrent index files
     magnet      create and manage magnet-link files
+    subtitle    copies subtitles, so media indexer can automatically add them
 """
 import sys
 from docopt import docopt
@@ -29,6 +30,9 @@ def main():
     elif command == 'magnet':
         from torrent_utils.commands import magnet
         sys.exit(magnet.main(argv))
+    elif command == 'subtitle':
+        from torrent_utils.commands import subtitle
+        sys.exit(subtitle.main(argv))
     else:
         print(f'"{command}" is not a valid command, please use --help to see a list of commands')
         sys.exit()
