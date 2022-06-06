@@ -43,21 +43,21 @@ def copy(directory: Path):
         for file in file_list:
             extension = os.path.basename(file).split('.')[-1]
 
-            # debug
-            print(file)
-
             if extension in VIDEO_EXTENSIONS:
                 video_file = Path(dir_name) / file
             elif extension in SUBTITLE_EXTENSIONS:
                 subtitle_file = Path(dir_name) / file
                 try:
                     video_file
-                except UnboundLocalError:
+                except NameError:
                     continue
 
                 new_subtitle_file = video_file.with_suffix(f'.{extension}')
-                shutil.copy(subtitle_file, new_subtitle_file)
-                print(f'Copied subtitle file "{subtitle_file}" to "{new_subtitle_file}".')
+                try:
+                    shutil.copy(subtitle_file, new_subtitle_file)
+                    print(f'Copied subtitle file "{subtitle_file}" to "{new_subtitle_file}".')
+                except shutil.SameFileError:
+                    print(f'Could not copy file "{subtitle_file}". Subtitle file"{new_subtitle_file}" already exists.')
 
 
 def main(argv=None):
