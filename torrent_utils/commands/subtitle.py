@@ -52,7 +52,7 @@ def copy(directory: Path):
                 except NameError:
                     continue
 
-                new_subtitle_file = video_file.with_suffix(f'.{extension}')
+                new_subtitle_file = video_file.with_suffix(f'.{os.path.basename(subtitle_file)}')
                 try:
                     shutil.copy(subtitle_file, new_subtitle_file)
                     print(f'Copied subtitle file "{subtitle_file}" to "{new_subtitle_file}".')
