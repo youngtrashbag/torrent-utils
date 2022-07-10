@@ -46,6 +46,15 @@ But if `content_path` is `/media/movies/american_psycho.mp4` the Filepath will b
 
 Will search subdirectories for magnet files, loads magnet files in similar way as described in *`create`*
 
+#### `check`
+
+`python -m torrent_utils magnet check --directory=/media/movies --verbose`
+
+Checks if immediate Subirectories (`/media/movies/*/`) if they contain a `magnet` file.
+Will print out those directories, which do **not** contain a `magnet` file.
+
+Option `--verbose` or `-v` print a message for every directory scanned.
+
 ### `subtitle`
 
 #### `copy`
