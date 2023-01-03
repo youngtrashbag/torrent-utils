@@ -1,6 +1,11 @@
 # Torrent Utils
 
-Manage your Torrents in the qBittorrent client *easily*.
+## **IMPORTANT INFO**
+
+**NO LONGER DEVELOPED ON GITHUB**
+
+You can find the new repository on [codeberg.org](https://codeberg.org/goonli/torrent-utils)
+
 
 ## Usage
 
